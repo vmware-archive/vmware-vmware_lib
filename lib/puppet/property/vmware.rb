@@ -56,7 +56,7 @@ class Puppet::Property::VMware_Array < Puppet::Property::VMware
   end
 
   def self.sort=(value)
-    raise Puppet::Error, 'VMWare_Array sort property must be :true or :false.' unless [:true, :false].include? value
+    raise Puppet::Error, 'VMWare_Array sort property must be :true, :false, or Proc.' unless ([:true, :false].include? value) || (value.is_a? Proc)
     @sort = value
   end
 
@@ -83,10 +83,13 @@ class Puppet::Property::VMware_Array < Puppet::Property::VMware
     return @should.nil? if is.nil?
 
     if self.class.inclusive == :true
-      if self.class.sort == :true
+      case self.class.sort
+      when :true
         is.sort == @should.sort
-      else
+      when :false
         is == @should
+      when Proc
+        is.send(:sort, &self.class.sort) == @should.send(:sort, &self.class.sort)
       end
     else
       (@should - is).empty?
