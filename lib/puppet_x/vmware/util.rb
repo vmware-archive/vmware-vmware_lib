@@ -39,7 +39,7 @@ module PuppetX
         node = hash
         keys = keys.dup.map{|el| el.to_sym}
         Puppet.debug "setting value at #{keys.inspect}"
-        
+
         # Note: if keys has only one element, keys[0..-2] is [],
         # so this code will insert value at top level of hash...
         # not particularly useful, but not obviously an error
