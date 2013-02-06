@@ -27,5 +27,15 @@ describe PuppetX::VMware::Util do
     PuppetX::VMware::Util.nested_value({'a'=>{'b'=>1}}, ['a', 'b']).should == 1
   end
 
-  # TODO: nested_value_set
+  it 'should set nested value' do
+    h={'a'=>{'b'=>1}}
+    PuppetX::VMware::Util.nested_value_set(h, ['a', 'b'], 2)
+    h['a']['b'].should == 1
+  end
+
+  it 'should not override nested value' do
+    h={'a'=>{'b'=>{'c' => 3}}}
+    PuppetX::VMware::Util.nested_value_set(h, ['a', 'b'], 2)
+    h['a']['b'].should == {'c' => 3}
+  end
 end
