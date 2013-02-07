@@ -17,6 +17,8 @@ module PuppetX::Puppetlabs::Transport
     def connect
     end
 
+    def close
+    end
   end
 end
 
@@ -53,5 +55,21 @@ describe PuppetX::Puppetlabs::Transport do
   it 'should find existing transport resource' do
     dummy1 = PuppetX::Puppetlabs::Transport.retrieve(:resource_ref => "Transport[conn_a]", :catalog => @catalog, :provider => 'dummy')
     PuppetX::Puppetlabs::Transport.find('conn_a', 'dummy').should == dummy1
+  end
+
+  it 'should close any open connections' do
+    dummy1 = PuppetX::Puppetlabs::Transport.retrieve(:resource_ref => "Transport[conn_a]", :catalog => @catalog, :provider => 'dummy')
+    dummy2 = PuppetX::Puppetlabs::Transport.retrieve(:resource_ref => "Transport[conn_b]", :catalog => @catalog, :provider => 'dummy')
+    dummy1.expects(:close)
+    dummy2.expects(:close)
+    PuppetX::Puppetlabs::Transport.cleanup
+  end
+
+  it 'should close connections after catalog apply' do
+    PuppetX::Puppetlabs::Transport.expects(:cleanup)
+
+    # catalog.apply writes result files, so testing with transaction directly.
+    @transaction = Puppet::Transaction.new(@catalog)
+    @transaction.evaluate
   end
 end
