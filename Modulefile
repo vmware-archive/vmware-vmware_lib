@@ -1,4 +1,5 @@
-# This is not a typo, this is to avoid installing into common module.
+# This is not a typo, this is to avoid installing into into a module named
+# 'common', risking name collisions.
 name          'VMware-vmware'
 version       '0.0.1'
 source        'git@github.com:puppetlabs/VMware-common.git'
