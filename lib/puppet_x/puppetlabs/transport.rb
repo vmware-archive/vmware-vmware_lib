@@ -1,3 +1,16 @@
+# Monkey patch transaction to cleanup Transport connection.
+# We need this to cleanup ssh/vcenter/vshield connections regardless of resource apply result.
+module Puppet
+  class Transaction
+    alias_method :evaluate_original, :evaluate
+
+    def evaluate
+      evaluate_original
+      PuppetX::Puppetlabs::Transport.cleanup
+    end
+  end
+end
+
 module PuppetX
   module Puppetlabs
     module Transport
@@ -21,6 +34,13 @@ module PuppetX
         end
 
         transport
+      end
+
+      def self.cleanup
+        @@instances.each do |i|
+          i.close if i.respond_to? :close
+        end
+      rescue
       end
 
       private
