@@ -27,7 +27,6 @@ class Puppet::Property::VMware < Puppet::Property
 end
 
 class Puppet::Property::VMware_Hash < Puppet::Property::VMware
-
   def munge(value)
     value = camel_munge(value)
   end
@@ -49,7 +48,6 @@ class Puppet::Property::VMware_Hash < Puppet::Property::VMware
 end
 
 class Puppet::Property::VMware_Array < Puppet::Property::VMware
-
   # Something retarded internally converts false boolean to true, so using symbols.
   def self.sort
     @sort ||= :true
@@ -66,7 +64,7 @@ class Puppet::Property::VMware_Array < Puppet::Property::VMware
 
   def self.inclusive=(value)
     raise Puppet::Error, 'VMWare_Array sort property must be :true or :false.' unless [:true, :false].include? value
-    @inclusive = (value == true)
+    @inclusive = value
   end
 
   def is_to_s(v)
@@ -94,5 +92,42 @@ class Puppet::Property::VMware_Array < Puppet::Property::VMware
     else
       (@should - is).empty?
     end
+  end
+end
+
+# Handle properties that are an Array of Hashes and each hash have a lookup key.
+# [ { 'name' => 'a', 'val' => '5' }, { 'name' => 'b', 'val' => '5' } ]
+class Puppet::Property::VMware_Array_Hash < Puppet::Property::VMware_Array
+  def self.key
+    @key ||= 'name'
+  end
+
+  def self.key=(value)
+    @key = value
+  end
+
+  def is_to_s(v)
+    v.inspect
+  end
+
+  def should_to_s(v)
+    v.inspect
+  end
+
+  def insync?(is)
+    return @should.nil? if is.nil?
+    key = self.class.key
+
+    @should.each do |h|
+      begin
+        match = is.find_all{|x| x[key] == h[key]}
+        return false unless match.size == 1
+        diff = HashDiff.diff(h, match.first)
+        return false unless diff.empty? or diff.select{|x| x.first != '+'}.empty?
+      rescue
+        return false
+      end
+    end
+    true
   end
 end
