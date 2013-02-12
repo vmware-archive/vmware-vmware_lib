@@ -14,6 +14,12 @@ Puppet::Type.newtype(:transport) do
   newparam(:server) do
   end
 
+  newparam(:options) do
+    validate do |value|
+      fail("Option value must be a hash.") unless value.is_a? ::Hash
+    end
+    defaultto({})
+  end
 end
 
 Puppet::Type.newmetaparam(:transport) do
