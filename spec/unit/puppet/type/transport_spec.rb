@@ -20,4 +20,17 @@ describe transport do
   it 'should have name as :namevar.' do
     @transport.key_attributes.should == [:name]
   end
+
+  it 'should have empty hash as default for options' do
+    @resource[:options].should == {}
+  end
+
+  it 'should accept hash value for options' do
+    @resource[:options] = { 'timeout' => 30 }
+    @resource[:options].should == { 'timeout' => 30 }
+  end
+
+  it 'should reject non-hash value for options' do
+   expect{ @resource[:options] = 50}.to raise_error
+  end
 end
