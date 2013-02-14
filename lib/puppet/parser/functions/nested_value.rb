@@ -1,3 +1,4 @@
+# Copyright (C) 2013 VMware, Inc.
 module Puppet::Parser::Functions
   newfunction(:nested_value, :type => :rvalue, :doc => <<-EOS
     EOS

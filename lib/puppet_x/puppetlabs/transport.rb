@@ -1,3 +1,4 @@
+# Copyright (C) 2013 VMware, Inc.
 # Monkey patch transaction to cleanup Transport connection.
 # We need this to cleanup ssh/vcenter/vshield connections regardless of resource apply result.
 module Puppet

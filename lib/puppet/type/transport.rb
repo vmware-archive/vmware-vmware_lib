@@ -1,3 +1,4 @@
+# Copyright (C) 2013 VMware, Inc.
 Puppet::Type.newtype(:transport) do
   @doc = "Manage transport connectivity info such as username, password, server."
 
