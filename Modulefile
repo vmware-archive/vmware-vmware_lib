@@ -1,12 +1,10 @@
-# This is not a typo, this is to avoid installing into into a module named
-# 'common', risking name collisions.
-name          'VMware-vmware'
-version       '0.0.1'
-source        'git@github.com:puppetlabs/VMware-common.git'
-author        'Puppet Labs | VMware 2013'
-license       ''
-summary       'VMware vCenter common module'
-description   'VMware shared module.'
-project_page  'https://github.com/puppetlabs/VMware-Common'
+name         'vmware-vmware_lib'
+version      '0.0.1'
+source       'git@github.com:puppetlabs/vmware-vmware_lib.git'
+author       'Puppet Labs | VMware 2013'
+license      'Apache 2.0'
+summary      'VMware lib module'
+description  'VMware shared module.'
+project_page 'https://github.com/puppetlabs/vmware-vmare_lib'
 
 ## Add dependencies, if any:
