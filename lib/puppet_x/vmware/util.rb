@@ -2,21 +2,56 @@
 module PuppetX
   module VMware
     module Util
+
       def self.camelize(snake_case, first_letter = :upper)
-        case first_letter
-        when :upper
-          snake_case.to_s.
-              gsub(/\/(.?)/){ "::" + $1.upcase }.
-              gsub(/(^|_)(.)/){ $2.upcase }
-        when :lower
-          snake_case.to_s[0].chr + camelize(snake_case)[1..-1]
-        end
+        result = EXCEPTIONS_CAMELIZE[snake_case] ||
+            case first_letter
+            when :upper
+              snake_case.to_s.
+                  gsub(/\/(.?)/){ "::" + $1.upcase }.
+                  gsub(/(^|_)(.)/){ $2.upcase }
+            when :lower
+              snake_case.to_s[0].chr + camelize(snake_case)[1..-1]
+            end
       end
 
       def self.snakeize(camel_case)
-        camel_case.to_s.
-            sub(/^[A-Z]+/){|s| s.downcase}.
-            gsub(/[A-Z]+/){|s| '_' + s.downcase}
+        result = EXCEPTIONS_SNAKEIZE[camel_case] ||
+            camel_case.to_s.
+                sub(/^[A-Z]+/){|s| s.downcase}.
+                gsub(/[A-Z]+/){|s| '_' + s.downcase}
+      end
+
+=begin
+        As of 2013/02/21, this file may be loaded twice,
+        which creates confusing warning messages regarding
+        constant redefinition.  To avoid these messages,
+        self.const_missing has been added here.  
+        
+        When proper handling of 'require'd files is available,
+        ordinary definitions of the constants will be sufficient, 
+        such as these, place at the top of the module:
+
+        EXCEPTIONS_SNAKEIZE = {
+          -- entries here --
+        }.freeze
+
+        EXCEPTIONS_CAMELIZE = EXCEPTIONS_SNAKEIZE.invert.freeze
+=end
+      def self.const_missing name
+        case name
+        when :EXCEPTIONS_SNAKEIZE
+          # EXCEPTIONS_SNAKEIZE is defined explicitly by this hash table
+          val = {
+            'VMwareDVSConfigSpecMap' => 'vmware_dvs_config_spec_map',
+          }.freeze
+        when :EXCEPTIONS_CAMELIZE
+          # EXCEPTIONS_CAMELIZE is the inverse of EXCEPTIONS_SNAKEIZE
+          val = const_get(:EXCEPTIONS_SNAKEIZE).invert.freeze
+        else
+          raise NameError, "Uninitialized constant: #{self.name}::#{name}"
+        end
+        const_set(name, val)
       end
 
       def self.nested_value(hash, keys, default=nil)

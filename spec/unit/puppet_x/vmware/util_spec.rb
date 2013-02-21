@@ -12,6 +12,14 @@ describe PuppetX::VMware::Util do
     PuppetX::VMware::Util.camelize('snake_case', :lower).should == 'snakeCase'
   end
 
+  it 'should camelize vmware_dvs_config_spec_map with exception table' do
+    PuppetX::VMware::Util.camelize('vmware_dvs_config_spec_map').should == 'VMwareDVSConfigSpecMap'
+  end
+
+  it 'should snakeize VMwareDVSConfigSpecMap with exception table' do
+    PuppetX::VMware::Util.snakeize('VMwareDVSConfigSpecMap').should == 'vmware_dvs_config_spec_map'
+  end
+
   it 'should snakeize CamelCase' do
     PuppetX::VMware::Util.snakeize('CamelCase').should == 'camel_case'
   end
