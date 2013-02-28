@@ -48,6 +48,17 @@ class Puppet::Property::VMware_Hash < Puppet::Property::VMware
   end
 end
 
+# VMware_Array support various forms of array comparison.
+# :sort indicates whether the array values should be sorted prior to comparison
+# :sort supports proc for custom sort such as:
+# :sort => { |x, y| x.key <=> y.key }
+#
+# :inclusive indicates whether the array value is complete.
+# :inclusive => :false intidates should values only need to be a subset of system value.
+#
+# Usage:
+#   newproperty(:server_list, :array_matching => :all, :sort => :true,
+#               :parent => Puppet::Property::VMware_Array) { }
 class Puppet::Property::VMware_Array < Puppet::Property::VMware
   # Something retarded internally converts false boolean to true, so using symbols.
   def self.sort
@@ -64,7 +75,7 @@ class Puppet::Property::VMware_Array < Puppet::Property::VMware
   end
 
   def self.inclusive=(value)
-    raise Puppet::Error, 'VMWare_Array sort property must be :true or :false.' unless [:true, :false].include? value
+    raise Puppet::Error, 'VMWare_Array inclusive property must be :true or :false.' unless [:true, :false].include? value
     @inclusive = value
   end
 
@@ -97,7 +108,12 @@ class Puppet::Property::VMware_Array < Puppet::Property::VMware
 end
 
 # Handle properties that are an Array of Hashes and each hash have a lookup key.
+# By default name is the primary key for each hash (their values should be unique):
 # [ { 'name' => 'a', 'val' => '5' }, { 'name' => 'b', 'val' => '5' } ]
+#
+# Usage:
+#   newproperty(:server_list, :array_matching => :all, :key => 'ipAddress',
+#               :parent => Puppet::Property::VMware_Array_Hash) { }
 class Puppet::Property::VMware_Array_Hash < Puppet::Property::VMware_Array
   def self.key
     @key ||= 'name'
