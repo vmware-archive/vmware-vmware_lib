@@ -36,6 +36,10 @@ describe PuppetX::VMware::Util do
     PuppetX::VMware::Util.nested_value({'a'=>{'b'=>1}}, ['a', 'b']).should == 1
   end
 
+  it 'should retrieve nested false value' do
+       PuppetX::VMware::Util.nested_value({'a'=>{'b'=>false}}, ['a', 'b']).should == false
+  end
+
   it 'should set nested value' do
     h={'a'=>{'b'=>1}}
     PuppetX::VMware::Util.nested_value_set(h, ['a', 'b'], 2)

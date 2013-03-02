@@ -58,7 +58,11 @@ module PuppetX
         value = hash.dup
         keys.each_with_index do |item, index|
           # handle Hash or RbVmomi::BasicTypes::ObjectWithProperties
-          unless (value.respond_to? :[]) && value[item]
+          #
+          # ASSUMPTION: [] returns nil for missing key 
+          #             for everything we are interested in
+          #
+          unless (value.respond_to? :[]) && (not value[item].nil?)
             default = yield hash, keys, index if block_given?
             return default
           end
