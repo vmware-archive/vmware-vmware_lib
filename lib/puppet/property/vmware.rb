@@ -1,5 +1,7 @@
 # Copyright (C) 2013 VMware, Inc.
 require 'set'
+require 'rubygems'
+require 'rbvmomi'
 require 'hashdiff'
 require 'pathname' # WORK_AROUND #14073 and #7788
 module_lib = Pathname.new(__FILE__).parent.parent.parent
