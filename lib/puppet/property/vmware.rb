@@ -53,6 +53,7 @@ class Puppet::Property::VMware_Hash < Puppet::Property::VMware
     diff = HashDiff.diff(desire, current)
     diff.empty? or diff.select{|x| x.first != '+'}.empty?
   end
+
 end
 
 # VMware_Array support various forms of array comparison.
@@ -122,6 +123,10 @@ end
 #   newproperty(:server_list, :array_matching => :all, :key => 'ipAddress',
 #               :parent => Puppet::Property::VMware_Array_Hash) { }
 class Puppet::Property::VMware_Array_Hash < Puppet::Property::VMware_Array
+  def munge(value)
+    PuppetX::VMware::Util.string_keys(value)
+  end
+
   def self.key
     @key ||= 'name'
   end
