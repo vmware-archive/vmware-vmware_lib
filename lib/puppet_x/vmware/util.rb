@@ -99,6 +99,30 @@ module PuppetX
         node[keys[-1]] = value
       end
 
+      def self.string_keys(myhash)
+        myhash.keys.each do |key|
+          value = myhash.delete(key)
+          if value.is_a? Hash
+            value = string_keys(value)
+          end
+
+          myhash[(key.to_s rescue key) || key] = value
+        end
+        myhash
+      end
+
+      def self.symbolize_keys(myhash)
+        myhash.keys.each do |key|
+          value = myhash.delete(key)
+          if value.is_a? Hash
+            value = symbolize_keys(value)
+          end
+
+          myhash[(key.to_sym rescue key) || key] = value
+        end
+        myhash
+      end
+
     end
   end
 end
