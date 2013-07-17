@@ -1,5 +1,16 @@
 # Copyright (C) 2013 VMware, Inc.
 module Puppet::Parser::Functions
+
+  # Public: Fetches value from a nested hash or return :undef for missing keys.
+  #
+  # Examples:
+  #
+  #   nested_value({'a' => {'b' => 1 }}, ['a', 'b'])
+  #   # => 1
+  #   nested_value({'a' => {'b' => 1 }}, ['a', 'c'])
+  #   # => :undef
+  #
+  # Returns nested hash key value.
   newfunction(:nested_value, :type => :rvalue, :doc => <<-EOS
     EOS
   ) do |arguments|
