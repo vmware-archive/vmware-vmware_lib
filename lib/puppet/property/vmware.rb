@@ -45,7 +45,7 @@ class Puppet::Property::VMware < Puppet::Property
   # Internal: munges hashes to ensure keys are camel case.
   #
   # value - the value to munge.
-  # uppercase - whether first character should be uppper case, default false.
+  # first_letter - the case of the first letter, default :lower.
   #
   # Examples:
   #
@@ -56,12 +56,12 @@ class Puppet::Property::VMware < Puppet::Property
   #   # => {:bigBox => {:fun => 3}}
   #
   # Returns: hash with all key camel case, or original value if it's not hash.
-  def camel_munge(value, uppercase = false)
+  def camel_munge(value, first_letter = :lower)
     case value
     when Hash
-      result = Hash.new
+      result = {}
       value.each do |k, v|
-        camel_key = PuppetX::VMware::Util.camelize(k, :lower)
+        camel_key = PuppetX::VMware::Util.camelize(k, first_letter)
         result[camel_key] = camel_munge v
       end
       result
