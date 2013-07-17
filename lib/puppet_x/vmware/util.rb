@@ -1,4 +1,14 @@
 # Copyright (C) 2013 VMware, Inc.
+
+# Allows usage of require_relative
+unless Kernel.respond_to?(:require_relative)
+  module Kernel
+    def require_relative(path)
+      require File.join(File.dirname(caller[0]), path.to_str)
+    end
+  end
+end
+
 module PuppetX
   module VMware
     module Util

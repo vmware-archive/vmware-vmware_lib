@@ -1,15 +1,15 @@
 # Copyright (C) 2013 VMware, Inc.
 require 'set'
-require 'rubygems'
 require 'rbvmomi'
 require 'hashdiff'
-require 'pathname' # WORK_AROUND #14073 and #7788
-module_lib = Pathname.new(__FILE__).parent.parent.parent
-require File.join module_lib, 'puppet_x/vmware/util'
 
-VIM = RbVmomi::VIM
-ABSTRACT_CLASS = :ABSTRACT_CLASS
-MO_KEY = :MO_KEY
+begin
+  require 'puppet_x/vmware/util'
+rescue LoadError => e
+  require 'pathname' # WORK_AROUND #14073 and #7788
+  module_lib = Pathname.new(__FILE__).parent.parent.parent
+  require File.join module_lib, 'puppet_x/vmware/util'
+end
 
 class Puppet::Property::VMware < Puppet::Property
 
