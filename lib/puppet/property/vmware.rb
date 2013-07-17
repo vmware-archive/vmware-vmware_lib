@@ -12,16 +12,57 @@ rescue LoadError => e
 end
 
 class Puppet::Property::VMware < Puppet::Property
-
   include PuppetX::VMware::Util
 
+  # Public: converts system value to puppet output string.
+  #
+  # value - data to format.
+  #
+  # Returns: string or object.inspect.
+  def is_to_s(value)
+    case value
+    when String
+      value
+    else
+      value.inspect
+    end
+  end
+
+  # Public: converts desire value to puppet output string.
+  #
+  # value - data to format.
+  #
+  # Returns: string or object.inspect.
+  def should_to_s(value)
+    case value
+    when String
+      value
+    else
+      value.inspect
+    end
+  end
+
+  # Internal: munges hashes to ensure keys are camel case.
+  #
+  # value - the value to munge.
+  # uppercase - whether first character should be uppper case, default false.
+  #
+  # Examples:
+  #
+  #   camel_munge('bar')
+  #   # => 'bar'
+  #
+  #   camel_munge({:big_box => { :fun => 3 }})
+  #   # => {:bigBox => {:fun => 3}}
+  #
+  # Returns: hash with all key camel case, or original value if it's not hash.
   def camel_munge(value, uppercase = false)
     case value
     when Hash
       result = Hash.new
       value.each do |k, v|
-        camel_k = PuppetX::VMware::Util.camelize(k, :lower)
-        result[camel_k] = camel_munge v
+        camel_key = PuppetX::VMware::Util.camelize(k, :lower)
+        result[camel_key] = camel_munge v
       end
       result
     else
