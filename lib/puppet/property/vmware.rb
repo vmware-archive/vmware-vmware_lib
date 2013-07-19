@@ -62,7 +62,7 @@ class Puppet::Property::VMware < Puppet::Property
       result = {}
       value.each do |k, v|
         camel_key = PuppetX::VMware::Util.camelize(k, first_letter)
-        result[camel_key] = camel_munge v
+        result[camel_key] = camel_munge(v, first_letter)
       end
       result
     else
@@ -118,7 +118,7 @@ class Puppet::Property::VMware < Puppet::Property
   end
 
   def is_symbool?(value)
-    self.class.is_symbool(value)
+    self.class.is_symbool? value
   end
 
   # Internal: is the value an Integer or string Integer, the joy of puppet manifest and ENC inconsistencies, see #21807.
@@ -135,11 +135,15 @@ class Puppet::Property::VMware < Puppet::Property
     when Integer
       true
     when String
-      Integer(value) rescue false
+      Integer(value) rescue return false
       true
     else
       false
     end
+  end
+
+  def is_stringint?(value)
+    self.class.is_stringint? value
   end
 end
 
