@@ -1,3 +1,6 @@
+VIM = RbVmomi::VIM
+ABSTRACT_CLASS = :ABSTRACT_CLASS
+MO_KEY = :MO_KEY
 # Handle properties that are an Array of vSphere API objects expressed as an
 # Array of hashes. 
 # By default name is the primary key for each hash (their values should be unique):
@@ -7,9 +10,6 @@
 #   newproperty(:server_list, :array_matching => :all, :key => 'ipAddress',
 #               :parent => Puppet::Property::VMware_Array_VIM_Object) { }
 class Puppet::Property::VMware_Array_VIM_Object < Puppet::Property::VMware_Array
-  VIM = RbVmomi::VIM
-  ABSTRACT_CLASS = :ABSTRACT_CLASS
-  MO_KEY = :MO_KEY
   def self.key
     @key ||= 'name'
   end
