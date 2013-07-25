@@ -5,6 +5,7 @@ lib/puppet/provider/esx_debug/default.rb
 .bundle
 .config
 .bak
+Gemfile.lock
 coverage
 InstalledFiles
 lib/bundler/man
