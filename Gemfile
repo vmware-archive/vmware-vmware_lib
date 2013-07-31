@@ -1,6 +1,7 @@
-source :rubygems
+source 'https://rubygems.org'
 
 gem 'hashdiff'
+gem 'rbvmomi'
 
 group :development, :test do
   gem 'rake'
@@ -10,8 +11,16 @@ group :development, :test do
   gem 'rspec-puppet', :require => false
 end
 
-if puppetversion = ENV['PUPPET_GEM_VERSION']
-  gem 'puppet', puppetversion, :require => false
+facterversion = ENV['GEM_FACTER_VERSION']
+if facterversion
+    gem 'facter', facterversion
+else
+    gem 'facter', :require => false
+end
+
+ENV['GEM_PUPPET_VERSION'] ||= ENV['PUPPET_GEM_VERSION']
+if puppetversion = ENV['GEM_PUPPET_VERSION']
+  gem 'puppet', puppetversion
 else
   gem 'puppet', :require => false
 end

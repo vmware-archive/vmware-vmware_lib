@@ -1,33 +1,43 @@
 # Copyright (C) 2013 VMware, Inc.
+
+# Allows usage of require_relative
+unless Kernel.respond_to?(:require_relative)
+  module Kernel
+    def require_relative(path)
+      require File.join(File.dirname(caller[0]), path.to_str)
+    end
+  end
+end
+
 module PuppetX
   module VMware
     module Util
 
       def self.camelize(snake_case, first_letter = :upper)
-        result = EXCEPTIONS_CAMELIZE[snake_case] ||
-            case first_letter
-            when :upper
-              snake_case.to_s.
-                  gsub(/\/(.?)/){ "::" + $1.upcase }.
-                  gsub(/(^|_)(.)/){ $2.upcase }
-            when :lower
-              snake_case.to_s[0].chr + camelize(snake_case)[1..-1]
-            end
+        EXCEPTIONS_CAMELIZE[snake_case] ||
+        case first_letter
+        when :upper
+          snake_case.to_s.
+            gsub(/\/(.?)/){ "::" + $1.upcase }.
+            gsub(/(^|_)(.)/){ $2.upcase }
+        when :lower
+          snake_case.to_s[0].chr + camelize(snake_case)[1..-1]
+        end
       end
 
       def self.snakeize(camel_case)
-        result = EXCEPTIONS_SNAKEIZE[camel_case] ||
-            camel_case.to_s.
-                sub(/^[A-Z]+/){|s| s.downcase}.
-                gsub(/[A-Z]+/){|s| '_' + s.downcase}
+        EXCEPTIONS_SNAKEIZE[camel_case] ||
+        camel_case.to_s.
+          sub(/^[A-Z]+/){|s| s.downcase}.
+          gsub(/[A-Z]+/){|s| '_' + s.downcase}
       end
 
 =begin
         As of 2013/02/21, this file may be loaded twice,
         which creates confusing warning messages regarding
         constant redefinition.  To avoid these messages,
-        self.const_missing has been added here.  
-        
+        self.const_missing has been added here.
+
         When proper handling of 'require'd files is available,
         ordinary definitions of the constants will be sufficient, 
         such as these, place at the top of the module:
@@ -59,7 +69,7 @@ module PuppetX
         keys.each_with_index do |item, index|
           # handle Hash or RbVmomi::BasicTypes::ObjectWithProperties
           #
-          # ASSUMPTION: [] returns nil for missing key 
+          # ASSUMPTION: [] returns nil for missing key
           #             for everything we are interested in
           #
           unless (value.respond_to? :[]) && (not value[item].nil?)
