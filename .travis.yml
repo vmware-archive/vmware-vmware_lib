@@ -1,18 +1,13 @@
 language: ruby
-bundler_args: --without development
 script: "bundle exec rake spec SPEC_OPTS='--format documentation'"
 rvm:
-  - 1.8.7
   - 1.9.3
-  - 2.0.0
 env:
-  - GEM_PUPPET_VERSION="~> 2.7.0"
-  - GEM_PUPPET_VERSION="~> 3.2.0"
+  - PUPPET_GEM_VERSION="~> 3.2.0"
 matrix:
-  exclude:
-    - rvm: 1.9.3
-      env: GEM_PUPPET_VERSION="~> 2.7.0"
-    - rvm: 2.0.0
-      env: GEM_PUPPET_VERSION="~> 2.7.0"
+  include:
+    - rvm: 1.8.7
+      env: PUPPET_GEM_VERSION="~> 2.7.0"
+      gemfile: gemfiles/Gemfile.ruby18
 notifications:
   email: false
