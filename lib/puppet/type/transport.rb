@@ -13,6 +13,7 @@ Puppet::Type.newtype(:transport) do
   end
 
   newparam(:server) do
+    defaultto('localhost')
   end
 
   newparam(:options) do
