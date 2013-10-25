@@ -70,7 +70,12 @@ describe PuppetX::Puppetlabs::Transport do
     PuppetX::Puppetlabs::Transport.expects(:cleanup)
 
     # catalog.apply writes result files, so testing with transaction directly.
-    @transaction = Puppet::Transaction.new(@catalog)
+    @transaction = nil
+    begin
+      @transaction = Puppet::Transaction.new(@catalog)
+    rescue
+      @transaction = Puppet::Transaction.new(@catalog, nil, nil)
+    end
     @transaction.evaluate
   end
 end

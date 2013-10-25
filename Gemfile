@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'hashdiff'
 gem 'rbvmomi'
+gem 'net-ssh'
 
 group :development, :test do
   gem 'rake'
