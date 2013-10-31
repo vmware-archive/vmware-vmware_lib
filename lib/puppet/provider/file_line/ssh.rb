@@ -1,4 +1,3 @@
-require 'net/ssh'
 require 'puppet_x/puppetlabs/transport'
 require 'puppet_x/puppetlabs/transport/ssh'
 
