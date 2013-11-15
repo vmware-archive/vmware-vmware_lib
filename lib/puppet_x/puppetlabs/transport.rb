@@ -29,7 +29,7 @@ module PuppetX
         provider = options[:provider]
 
         unless transport = find(name, provider)
-          transport = PuppetX::Puppetlabs::Transport::const_get(provider.capitalize).new(res_hash)
+          transport = PuppetX::Puppetlabs::Transport::const_get(provider.to_s.capitalize).new(res_hash)
           transport.connect
           @@instances << transport
         end
@@ -47,7 +47,25 @@ module PuppetX
       private
 
       def self.find(name, provider)
-        @@instances.find{ |x| x.is_a? PuppetX::Puppetlabs::Transport::const_get(provider.capitalize) and x.name == name }
+        @@instances.find{ |x| x.is_a? PuppetX::Puppetlabs::Transport::const_get(provider.to_s.capitalize) and x.name == name }
+      end
+
+      def self.included(base)
+        base.extend(ClassMethods)
+      end
+
+      def transport
+        self.class.transport(resource)
+      end
+
+      module ClassMethods
+        def transport(resource)
+          @transport ||= PuppetX::Puppetlabs::Transport.retrieve(
+            :resource_ref => resource[:transport],
+            :catalog => resource.catalog,
+            :provider => resource.provider.class.name
+          )
+        end
       end
     end
   end
