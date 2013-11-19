@@ -2,7 +2,6 @@
 # Copyright (C) 2013 VMware, Inc.
 
 require 'spec_helper'
-require 'puppet_x/puppetlabs/transport'
 
 module PuppetX::Puppetlabs::Transport
   class Dummy
