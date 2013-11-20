@@ -107,10 +107,10 @@ class Puppet::Property::VMware_Array_VIM_Object < Puppet::Property::VMware_Array
           case wsdl_type
           when 'xsd:int', 'xsd:short', 'xsd:long'
             v[v_key] = Integer(v[v_key])
-          when 'xsd:string', 'xsd:boolean'
+          when 'xsd:string', 'xsd:boolean', 'xsd:anyType'
             v[v_key] = v[v_key]
           else
-            fail "unexpected wsdl_type \"#{wsdl_type}\""
+            fail "Unexpected wsdl_type \"#{wsdl_type}\" for #{v_key} with value #{v[v_key]}"
           end
         elsif (nested_type = preferred_class_by_class wsdl_type)
           if nested_type.kind == :managed
