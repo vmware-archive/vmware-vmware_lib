@@ -24,6 +24,8 @@ Puppet::Type.newtype(:transport) do
   end
 end
 
-Puppet::Type.newmetaparam(:transport) do
-  desc "Provide a new metaparameter for all resources called transport."
+unless Puppet::Type.metaparams.include? :transport
+  Puppet::Type.newmetaparam(:transport) do
+    desc "Provide a new metaparameter for all resources called transport."
+  end
 end
