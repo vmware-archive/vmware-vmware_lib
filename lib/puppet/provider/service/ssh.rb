@@ -1,7 +1,8 @@
 require 'pathname'
-mod = Puppet::Module.find('vmware_lib', Puppet[:environment].to_s)
-require File.join mod.path, 'lib/puppet_x/puppetlabs/transport'
-require File.join mod.path, 'lib/puppet_x/puppetlabs/transport/ssh'
+mod = Puppet::Module.find('vmware_lib', Puppet[:environment].to_s).path rescue Pathname.new(__FILE__).parent.parent.parent.parent.parent
+require File.join mod, 'lib/puppet/type/transport'
+require File.join mod, 'lib/puppet_x/puppetlabs/transport'
+require File.join mod, 'lib/puppet_x/puppetlabs/transport/ssh'
 
 Puppet::Type.type(:service).provide(:ssh) do
   confine :feature => :ssh
