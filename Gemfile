@@ -3,7 +3,6 @@ source 'https://rubygems.org'
 gem 'hashdiff'
 gem 'rbvmomi'
 gem 'net-ssh'
-gem 'net-scp'
 
 group :development, :test do
   gem 'rake'
