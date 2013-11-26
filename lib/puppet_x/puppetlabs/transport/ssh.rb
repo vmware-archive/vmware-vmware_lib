@@ -1,5 +1,6 @@
 # Copyright (C) 2013 VMware, Inc.
 require 'net/ssh' if Puppet.features.ssh? and ! Puppet.run_mode.master?
+require 'net/scp' if Puppet.features.ssh? and ! Puppet.run_mode.master?
 
 module PuppetX::Puppetlabs::Transport
   class Ssh
@@ -35,6 +36,12 @@ module PuppetX::Puppetlabs::Transport
     def exec(command)
       Puppet.debug("Executing on #{@host}:\n#{command}")
       @ssh.exec(command)
+    end
+
+    # Return an SCP object
+    def scp
+      Puppet.debug("Creating SCP session from existing SSH connection")
+      @ssh.scp
     end
 
     def close
