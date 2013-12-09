@@ -34,7 +34,11 @@ class Puppet::Property::VMware_Array < Puppet::Property::VMware
     # If the provider expects array property nil == [], it should return [] in the property getter.
     return @should.nil? if is.nil?
 
-    if self.class.inclusive == :true
+    inclusive = self.class.inclusive == :true
+    # Allow resources to override inclusive behavior
+    inclusive = self.resource.value('inclusive') == true unless self.resource.value('inclusive').nil?
+
+    if inclusive
       case self.class.sort
       when :true
         is.sort == @should.sort
