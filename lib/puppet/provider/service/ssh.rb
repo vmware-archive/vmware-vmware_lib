@@ -9,6 +9,10 @@ Puppet::Type.type(:service).provide(:ssh) do
 
   include PuppetX::Puppetlabs::Transport
 
+  def self.instances
+    []
+  end
+
   def initd_cmd
     "/etc/init.d/#{resource[:name]}"
   end
