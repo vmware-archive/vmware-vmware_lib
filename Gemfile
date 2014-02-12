@@ -3,12 +3,14 @@ source 'https://rubygems.org'
 gem 'hashdiff'
 gem 'rbvmomi'
 gem 'net-ssh'
+gem 'net-scp'
 
 group :development, :test do
   gem 'rake'
   gem 'rspec', "~> 2.11.0", :require => false
   gem 'mocha', "~> 0.10.5", :require => false
   gem 'puppetlabs_spec_helper', :require => false
+  gem 'puppet-lint', :require => false
   gem 'rspec-puppet', :require => false
 end
 
