@@ -5,11 +5,15 @@ require 'puppet/property/vmware'
 describe Puppet::Property::VMware_Array_Hash do
   before(:each) do
     Puppet::Property::VMware_Array_Hash.initvars
-    @resource = stub 'resource', :[]= => nil, :property => nil
+    @resource = stub 'resource', :[]= => nil, :property => nil, :value => nil
     @property = Puppet::Property::VMware_Array_Hash.new(:resource => @resource)
     @provider = mock("provider")
     @property.stubs(:provider).returns(@provider)
     @property.stubs(:name).returns(:prop_name)
+  end
+
+  it 'should have default inclusive settings' do
+    @property.class.inclusive.should == :false
   end
 
   it 'should accept have default comparison hash key' do

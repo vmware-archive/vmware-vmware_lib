@@ -5,9 +5,19 @@
 # Usage:
 #   newproperty(:server_list, :array_matching => :all, :key => 'ipAddress',
 #               :parent => Puppet::Property::VMware_Array_Hash) { }
+
 class Puppet::Property::VMware_Array_Hash < Puppet::Property::VMware_Array
   def munge(value)
     PuppetX::VMware::Util.string_keys(value)
+  end
+
+  def self.inclusive
+    @inclusive ||= :false
+  end
+
+  def self.inclusive=(value)
+    raise Puppet::Error, 'VMWare_Array inclusive property must be :true or :false.' unless is_symbool? value
+    @inclusive = value
   end
 
   def self.key
@@ -18,11 +28,8 @@ class Puppet::Property::VMware_Array_Hash < Puppet::Property::VMware_Array
     @key = value
   end
 
-  def insync?(is)
-    return @should.nil? if is.nil?
-    key = self.class.key
-
-    @should.each do |h|
+  def match_subset(should, is, key)
+    should.each do |h|
       begin
         match = is.find_all{|x| x[key] == h[key]}
         return false unless match.size == 1
@@ -32,5 +39,20 @@ class Puppet::Property::VMware_Array_Hash < Puppet::Property::VMware_Array
       end
     end
     true
+  end
+
+  def insync?(is)
+    return @should.nil? if is.nil?
+    key = self.class.key
+
+    inclusive = self.class.inclusive == :true
+    # Allow resources to override inclusive behavior
+    inclusive = self.resource.value('inclusive') == :true unless self.resource.value('inclusive').nil?
+
+    if inclusive
+      match_subset(@should, is, key) and match_subset(is, @should, key)
+    else
+      match_subset(@should, is, key)
+    end
   end
 end
