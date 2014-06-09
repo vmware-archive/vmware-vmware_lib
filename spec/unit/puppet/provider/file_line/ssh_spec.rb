@@ -1,10 +1,6 @@
 #!/usr/bin/env rspec
 
 require 'spec_helper'
-# Attempting to coerce 2.7.23
-require 'pathname' # WORK_AROUND #14073 and #7788
-mod = Puppet::Module.find('stdlib', Puppet[:environment].to_s)
-require File.join mod.path, 'lib/puppet/type/file_line'
 
 describe Puppet::Type.type(:file_line).provider(:ssh) do
   context 'when adding lines to file' do
