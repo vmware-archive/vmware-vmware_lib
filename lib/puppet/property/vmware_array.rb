@@ -49,7 +49,7 @@ class Puppet::Property::VMware_Array < Puppet::Property::VMware
 
     preserve = self.class.preserve == :true
     # Allow resources to override preserve behavior
-    preserve = self.resource.value('preserve') == true unless self.resource.value('preserve').nil?
+    preserve = self.resource.value('preserve') == :true unless self.resource.value('preserve').nil?
 
     if inclusive
       case self.class.sort
