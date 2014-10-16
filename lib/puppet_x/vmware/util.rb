@@ -109,14 +109,19 @@ module PuppetX
         node[keys[-1]] = value
       end
 
-      def self.string_keys(myhash)
+      def self.string_keys(myhash,exclusions=[:attributes!,:order!])
         myhash.keys.each do |key|
           value = myhash.delete(key)
           if value.is_a? Hash
             value = string_keys(value)
           end
 
-          myhash[(key.to_s rescue key) || key] = value
+          # exclude certain keys from being converted, specifically for gyoku
+          if exclusions.include?(key)
+            myhash[key] = value
+          else
+            myhash[(key.to_s rescue key) || key] = value
+          end
         end
         myhash
       end
