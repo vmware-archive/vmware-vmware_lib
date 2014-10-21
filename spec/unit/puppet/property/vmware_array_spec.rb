@@ -12,34 +12,35 @@ describe Puppet::Property::VMware_Array do
     @property.stubs(:name).returns(:prop_name)
   end
 
-  it 'should have default inclusive and sort settings' do
+  it 'should have default inclusive, preserve, and sort settings' do
     @property.class.inclusive.should == :true
+    @property.class.preserve.should == :false
     @property.class.sort.should == :true
   end
 
-  it 'should by return true for unordered array by default' do
+  it 'should return true for unordered array with matching elements by default' do
     @property.should = ['c', 'b', 'a']
     @property.insync?(['a', 'b', 'c']).should == true
   end
 
-  it 'should by return false for unmatched array' do
+  it 'should return false for unmatched array' do
     @property.should = ['d', 'b', 'a']
     @property.insync?(['a', 'b', 'c']).should == false
   end
 
-  it 'should by return false for unordered array if sort is false' do
+  it 'should return false for unordered array with matching elements if sort is :false' do
     @property.should = ['c', 'b', 'a']
     @property.class.sort = :false
     @property.insync?(['a', 'b', 'c']).should == false
   end
 
-  it 'should by return true for non-inclusive subset list' do
+  it 'should return true for non-inclusive subset if class inclusive is :false' do
     @property.should = ['a', 'b']
     @property.class.inclusive = :false
     @property.insync?(['a', 'b', 'd']).should == true
   end
 
-  it 'should union new and old when inclusive is false and preserve is true' do
+  it 'should return false and union current and desired sets when class inclusive is :false and preserve is :true' do
     @property.class.inclusive = :false
     @property.class.preserve  = :true
     @property.should = ['a', 'c']
@@ -47,33 +48,50 @@ describe Puppet::Property::VMware_Array do
     @property.should_for_spec.sort.should == ['a', 'b', 'c', 'd']
   end
 
-=begin
-
-These @resource.stubs just don't seem to work.
-
-  it 'should by return false for non-inclusive subset when resource override inclusive true' do
-    @resource.stubs(:value){'inclusive'}.returns(true)
+  it 'should return false for non-inclusive subset when resource override inclusive :true' do
+    @property.class.inclusive = :false # be sure overrides are overriding
+    @property.class.preserve  = :false # be sure overrides are overriding
+    @resource.stubs(:value).at_least(2).with('inclusive').returns(:true)
+    @resource.stubs(:value).at_least(2).with('preserve' ).returns(:true)
+    @resource.value('inclusive').should == :true
+    @resource.value('preserve' ).should == :true
     @property.should = ['a', 'b']
-    @property.class.inclusive = :false
     @property.insync?(['a', 'b', 'd']).should == false
   end
 
-  it 'should by return true for non-inclusive subset when resource override inclusive false' do
-    @resource.stubs(:value){'inclusive'}.returns(false)
+  it 'should return true for non-inclusive subset when resource override inclusive :false' do
+    @property.class.inclusive = :true  # be sure overrides are overriding
+    @property.class.preserve  = :false # be sure overrides are overriding
+    @resource.stubs(:value).at_least(2).with('inclusive').returns(:false)
+    @resource.stubs(:value).at_least(2).with('preserve' ).returns(:true)
+    @resource.value('inclusive').should == :false
+    @resource.value('preserve' ).should == :true
     @property.should = ['a', 'b']
-    @property.class.inclusive = :true
-    @property.resource.inclusive = :false
     @property.insync?(['a', 'b', 'd']).should == true
   end
 
-  it 'should by preserve or non-inclusive subset when resource override preserve true' do
-    @resource.stubs(:value){'inclusive'}.returns(false)
+  it 'should return false and union current and desired sets when resource override inclusive is :false and preserve is :true' do
+    @property.class.inclusive = :true  # be sure overrides are overriding
+    @property.class.preserve  = :false # be sure overrides are overriding
+    @resource.stubs(:value).at_least(2).with('inclusive').returns(:false)
+    @resource.stubs(:value).at_least(2).with('preserve' ).returns(:true)
+    @resource.value('inclusive').should == :false
+    @resource.value('preserve' ).should == :true
     @property.should = ['a', 'c']
-    @property.class.inclusive = :false
-    @property.class.preserve = :true
     @property.insync?(['a', 'b', 'd']).should == false
+    @property.should_for_spec.sort.should == ['a', 'b', 'c', 'd']
   end
-=end
+
+  it 'should return false and ignore current set when resource override inclusive is :false and preserve is :false' do
+    @property.class.inclusive = :true  # be sure overrides are overriding
+    @property.class.preserve  = :true  # be sure overrides are overriding
+    @resource.stubs(:value).at_least(2).with('inclusive').returns(:false)
+    @resource.stubs(:value).at_least(2).with('preserve' ).returns(:false)
+    @resource.value('inclusive').should == :false
+    @resource.value('preserve' ).should == :false
+    @property.should = ['a', 'c']
+    @property.insync?(['a', 'b', 'd']).should == false
+    @property.should_for_spec.sort.should == ['a', 'c']
+  end
 
 end
-
