@@ -38,6 +38,10 @@ class Puppet::Property::VMware_Array < Puppet::Property::VMware
     @preserve = value
   end
 
+  def should_for_spec
+    @should
+  end
+
   def insync?(is)
     # Handle the case when the current value is nil.
     # If the provider expects array property nil == [], it should return [] in the property getter.
@@ -45,11 +49,11 @@ class Puppet::Property::VMware_Array < Puppet::Property::VMware
 
     inclusive = self.class.inclusive == :true
     # Allow resources to override inclusive behavior
-    inclusive = self.resource.value('inclusive') == true unless self.resource.value('inclusive').nil?
+    inclusive = self.resource.value('inclusive') == :true unless self.resource.value('inclusive').nil?
 
-    preserve = self.class.preserve == :true
+    preserve  = self.class.preserve  == :true
     # Allow resources to override preserve behavior
-    preserve = self.resource.value('preserve') == :true unless self.resource.value('preserve').nil?
+    preserve  = self.resource.value('preserve')  == :true unless self.resource.value('preserve').nil?
 
     if inclusive
       case self.class.sort

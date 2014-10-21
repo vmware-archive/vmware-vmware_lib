@@ -7,8 +7,7 @@ gem 'net-scp'
 
 group :development, :test do
   gem 'rake'
-  gem 'rspec', "~> 2.11.0", :require => false
-  gem 'mocha', "~> 0.10.5", :require => false
+  gem 'rspec', "~> 2.99", :require => false
   gem 'puppetlabs_spec_helper', '0.4.1', :require => false
   gem 'puppet-lint', :require => false
   gem 'rspec-puppet', :require => false
