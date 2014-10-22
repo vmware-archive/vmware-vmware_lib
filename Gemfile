@@ -11,6 +11,7 @@ group :development, :test do
   gem 'puppetlabs_spec_helper', '0.4.1', :require => false
   gem 'puppet-lint', :require => false
   gem 'rspec-puppet', :require => false
+  # gem 'pry', :require => true
 end
 
 facterversion = ENV['GEM_FACTER_VERSION']
