@@ -81,15 +81,17 @@ module PuppetX
         value
       end
 
-      def self.nested_value_set(hash, keys, value, keys_are_syms=true)
+      def self.nested_value_set(hash, keys, value, transform_keys=:symbol)
         fail "'hash' is not a hash: '#{hash.inspect}'" unless hash.is_a? Hash
         fail "'keys' is not an array: '#{keys.inspect}'" unless keys.is_a? Array
         fail "'keys' array is empty" if keys.empty?
 
         node = hash
-        if keys_are_syms
+        case transform_keys
+        when :false, FalseClass
+        when :symbol
           keys = keys.dup.map{|el| el.to_sym}
-        else
+        when :string
           keys = keys.dup.map{|el| el.to_s}
         end
         Puppet.debug "setting value at #{keys.inspect}"
