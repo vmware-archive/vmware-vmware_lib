@@ -37,7 +37,7 @@ Puppet::Type.type(:file_line).provide(:ssh) do
       raise Puppet::Error, "More than one line in file '#{resource[:path]}' matches pattern '#{resource[:match]}'"
     elsif match_count == 1
       Puppet.debug('Replacing config line')
-      transport.exec!("sed -i \"s/#{resource[:match]}.*/#{resource[:line]}/\" #{resource[:path]}")
+      transport.exec!("sed -i \"s|#{resource[:match]}.*|#{resource[:line]}|\" #{resource[:path]}")
     else
       append_line
     end
