@@ -52,7 +52,7 @@ Puppet::Type.type(:file_line).provide(:ssh) do
     when 1 # find the line to put our line after
       # append in middle
       Puppet.debug("Appending config line after #{resource[:after]}")
-      transport.exec!("sed -i \"/#resource[:after]/a#{resource[:line]}\" #{resource[:path]}")
+      transport.exec!("sed -i '|#resource[:after]|a#{resource[:line]}' #{resource[:path]}")
     when 0 # append the line to the end of the file
       # append at the end
       append_line
