@@ -1,3 +1,7 @@
+# If for some reason you need to match a "resource" that has a pipe "|" character
+# you will need to escape the character. ZA-821 was created to eventually make the 
+# delimiter dynamically changed if necessary.
+
 require 'pathname'
 mod = Puppet::Module.find('vmware_lib', Puppet[:environment].to_s).path rescue Pathname.new(__FILE__).parent.parent.parent.parent.parent
 require File.join mod, 'lib/puppet/type/transport'
