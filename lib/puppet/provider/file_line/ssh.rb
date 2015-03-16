@@ -1,3 +1,7 @@
+# If for some reason you need to match a "resource" that has a pipe "|" character
+# you will need to escape the character. ZA-821 was created to eventually make the 
+# delimiter dynamically changed if necessary.
+
 require 'pathname'
 mod = Puppet::Module.find('vmware_lib', Puppet[:environment].to_s).path rescue Pathname.new(__FILE__).parent.parent.parent.parent.parent
 require File.join mod, 'lib/puppet/type/transport'
@@ -37,7 +41,7 @@ Puppet::Type.type(:file_line).provide(:ssh) do
       raise Puppet::Error, "More than one line in file '#{resource[:path]}' matches pattern '#{resource[:match]}'"
     elsif match_count == 1
       Puppet.debug('Replacing config line')
-      transport.exec!("sed -i \"s/#{resource[:match]}.*/#{resource[:line]}/\" #{resource[:path]}")
+      transport.exec!("sed -i 's|#{resource[:match]}.*|#{resource[:line]}|' #{resource[:path]}")
     else
       append_line
     end
@@ -52,7 +56,7 @@ Puppet::Type.type(:file_line).provide(:ssh) do
     when 1 # find the line to put our line after
       # append in middle
       Puppet.debug("Appending config line after #{resource[:after]}")
-      transport.exec!("sed -i \"/#resource[:after]/a#{resource[:line]}\" #{resource[:path]}")
+      transport.exec!("sed -i '|#resource[:after]|a#{resource[:line]}' #{resource[:path]}")
     when 0 # append the line to the end of the file
       # append at the end
       append_line
