@@ -5,6 +5,7 @@ require File.join mod, 'lib/puppet_x/puppetlabs/transport'
 require File.join mod, 'lib/puppet_x/puppetlabs/transport/ssh'
 
 Puppet::Type.type(:service).provide(:ssh) do
+  confine :kernel => [:Linux]
   confine :feature => :ssh
 
   include PuppetX::Puppetlabs::Transport
