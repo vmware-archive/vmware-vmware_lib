@@ -1,5 +1,4 @@
 # Copyright (C) 2013 VMware, Inc.
-confine :kernel => [:Linux]
 require 'net/ssh' unless Puppet.run_mode.master?
 
 module PuppetX::Puppetlabs::Transport
