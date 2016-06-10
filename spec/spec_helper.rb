@@ -1,5 +1,10 @@
 require 'puppetlabs_spec_helper/module_spec_helper'
 require 'pathname'
 
-path = File.join(Pathname.new(__FILE__).parent, 'fixtures/modules')
-Puppet[:modulepath] = path
+# Set Ruby load paths for the fixtures, just setting Puppet modulepath is not enough
+[ 'stdlib', 'vmware_lib' ].each do |mod|
+  $:.unshift File.dirname(__FILE__) + "/fixtures/modules/#{mod}/lib"
+end
+
+
+
