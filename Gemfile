@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 gem 'hashdiff'
 gem 'rbvmomi'
-gem 'net-ssh'
 gem 'net-scp'
 
 group :development, :test do
@@ -26,4 +25,10 @@ if puppetversion = ENV['GEM_PUPPET_VERSION']
   gem 'puppet', puppetversion
 else
   gem 'puppet', :require => false
+end
+
+if RUBY_VERSION < '2.0'
+  gem 'net-ssh', "~> 2.0"
+else
+  gem 'net-ssh'
 end
