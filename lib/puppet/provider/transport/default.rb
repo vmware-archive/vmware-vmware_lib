@@ -20,4 +20,8 @@ Puppet::Type.type(:transport).provide(:default) do
     resource[:options]
   end
 
+  def self.post_resource_eval
+    PuppetX::Puppetlabs::Transport.cleanup
+  end
+
 end
