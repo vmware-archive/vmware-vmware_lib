@@ -1,3 +1,6 @@
+
+# VMware has ended active development of this project, this repository will no longer be updated.
+
 # VMware Library for Puppet Modules
 
 [![Build Status](https://travis-ci.org/vmware/vmware-vmware_lib.png?branch=master)](https://travis-ci.org/vmware/vmware-vmware_lib)
